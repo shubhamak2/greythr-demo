@@ -1,5 +1,5 @@
-export const USERNAME = '';
-export const PASSWORD = '';
+export const USERNAME = 'EC/INDB/126';
+export const PASSWORD = 'shubham0000@@';
 
 export const GREY_THR_URL = 'https://grepruby.greythr.com';
 
@@ -12,3 +12,5 @@ export const SCREEN_WIDTH = 1080;
 export const SCREEN_HEIGHT = 1024;
 
 export const HEADLESS_MODE = false;
+
+export const DEFAULT_TIMEOUT = 50000;

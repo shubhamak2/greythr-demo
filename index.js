@@ -10,13 +10,13 @@ import {
   PASSWORD,
   SCREEN_HEIGHT,
   SCREEN_WIDTH,
-  HEADLESS_MODE
+  HEADLESS_MODE,
+  DEFAULT_TIMEOUT
 } from './config.js';
 
 import {
   USERNAME_INPUT_FIELD_ID_TEXT,
   PASSWORD_INPUT_FIELD_ID_TEXT,
-  VIEW_SWIPES_SELECTOR_TEXT,
   PINK_COLOR_CODE,
   SIGN_IN,
   SIGN_OUT
@@ -48,19 +48,22 @@ const init = async () => {
   await page.waitForTimeout(SELECTOR_WAIT_TIME);
 
   logText({ text: 'Entering username:', value: "*".repeat(USERNAME.length), colorCode: PINK_COLOR_CODE });
-  const usernameSelector = await page.waitForSelector(`input[id="${USERNAME_INPUT_FIELD_ID_TEXT}"]`);
+  const usernameSelector = await page.waitForSelector(`input[id="${USERNAME_INPUT_FIELD_ID_TEXT}"]`, { timeout: DEFAULT_TIMEOUT });
   await usernameSelector.type(USERNAME, {delay: KEYBOARD_TYPING_DELAY_TIME})
 
   logText({ text: 'Entering password:', value: "*".repeat(PASSWORD.length), colorCode: PINK_COLOR_CODE });
-  const passwordSelector = await page.waitForSelector(`input[id="${PASSWORD_INPUT_FIELD_ID_TEXT}"]`);
+  const passwordSelector = await page.waitForSelector(`input[id="${PASSWORD_INPUT_FIELD_ID_TEXT}"]`, { timeout: DEFAULT_TIMEOUT });
   await passwordSelector.type(PASSWORD, {delay: KEYBOARD_TYPING_DELAY_TIME})
 
   logText({ text: 'Submitting the form...', colorCode: PINK_COLOR_CODE });
   await page.click("button[type=submit]", { waitForTimeout: SUBMIT_BUTTON_WAIT_TIME });
 
   logText({ text: 'Waiting for sign In/sign Out button...' });
-  await page.waitForXPath(`//*[@name='${VIEW_SWIPES_SELECTOR_TEXT}']`);
-
+  await page.waitForNetworkIdle({ timeout: DEFAULT_TIMEOUT });
+  logText({ text: 'In progress...' });
+  await page.waitForTimeout(5000);
+  
+  logText({ text: 'Performing action now...' });
   const button = await page.evaluateHandle(`document.querySelector("body > app > ng-component > div > div > div.container-fluid.app-container.px-0 > div > ghr-home > div.page.page-home.ng-star-inserted > div > gt-home-dashboard > div > div:nth-child(3) > gt-component-loader > gt-attendance-info > div > div > div.btn-container.mt-3x.flex.flex-row-reverse.justify-between.ng-star-inserted > gt-button:nth-child(1)").shadowRoot.querySelector("button")`);
   button.click();
 
